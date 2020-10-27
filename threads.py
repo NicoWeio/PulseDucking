@@ -1,29 +1,25 @@
 #!/usr/bin/python3
 
-import _thread
+import threading
 import time
 
 import reader
+import get_inputs
 
-# works
-# reader.monitor(513)
-
-# Define a function for the thread
-def print_time( threadName, delay):
-   count = 0
-   while count < 5:
-      time.sleep(delay)
-      count += 1
-      print ("%s: %s" % ( threadName, time.ctime(time.time()) ))
-
-# Create two threads as follows
 try:
-   _thread.start_new_thread( print_time, ("Thread-1", 2, ) )
-   _thread.start_new_thread( print_time, ("Thread-2", 4, ) )
-   # _thread.start_new_thread( reader.monitor, (513) )
-   # _thread.start_new_thread( reader.monitor, (69420) )
-except:
-   print ("Error: unable to start thread")
+    inputs = get_inputs.get()
+    # print(inputs)
 
-while 1:
-   pass
+    inputsToWatch = (item for item in inputs if item['name'] == 'Google Chrome')
+    inputToWatch = next(inputsToWatch, None)
+    print(list(inputsToWatch))
+    if inputToWatch:
+        print(f"Watching{inputToWatch['name']} ({inputToWatch['index']})")
+        t = threading.Thread(target=reader.monitor, args=[inputToWatch['index']])
+        t.start()
+    else:
+        print("Nothing to watch.")
+        # exit()
+
+except:
+   print ("Error: unable to start thread (???)")
