@@ -1,14 +1,12 @@
 import subprocess
-import sys
 
-import react
-
-def monitor(input, callback):
+def monitor(input, supervisor):
     zeroCount = 0
     isPlaying = None
 
     try:
-        proc = subprocess.Popen(['parec', f"--monitor-stream={str(input['index'])}"], stdout=subprocess.PIPE)
+        # TODO: read stderr instead of redirecting to DEVNULL
+        proc = subprocess.Popen(['parec', f"--monitor-stream={str(input['index'])}"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         while True:
             data = proc.stdout.read(1)
             isZero = ord(data) == 0
@@ -24,10 +22,7 @@ def monitor(input, callback):
             if (newIsPlaying != isPlaying):
                 print(f"{input['name']}: {'playing' if newIsPlaying else 'not playing'}")
                 isPlaying = newIsPlaying
-                react.onPlayStateChange(newIsPlaying)
-    except TypeError: # TypeError: ord() expected a character, but string of length 0 found
-        callback(input, 'closed')
+                supervisor.onPlayStateChange(newIsPlaying)
 
-if __name__ == '__main__':
-    print("I am… main.")
-    monitor(513)
+    except TypeError: # TypeError: ord() expected a character, but string of length 0 found
+        supervisor.onClose(input)

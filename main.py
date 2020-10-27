@@ -5,6 +5,7 @@ import threading
 import time
 
 import inputs
+import react
 import reader
 
 with open('config.json', 'r') as f:
@@ -12,24 +13,26 @@ with open('config.json', 'r') as f:
 
 watchingIndices = []
 
-def onCallback(input, message):
-    if message == 'closed':
+class Supervisor:
+    def onPlayStateChange(self, playing):
+        react.onPlayStateChange(playing)
+    def onClose(self, input):
         watchingIndices.remove(input['index'])
         print(f"Stopped watching {inputs.stringify(input)}")
-    else:
-        print("onCallback", input, message)
+
+supervisorInstance = Supervisor()
 
 def updateWatches():
     inputsList = inputs.get()
 
     namesToWatch = [a['name'] for a in config['applications'] if a['role'] == 'master']
 
-    inputsToWatch = [item for item in inputsList if item['name'] in namesToWatch]
+    inputsToWatch = [i for i in inputsList if i['name'] in namesToWatch]
     inputsToWatchNew = [i for i in inputsToWatch if i['index'] not in watchingIndices]
 
     for inputToWatch in inputsToWatchNew:
         print(f"Started watching {inputs.stringify(inputToWatch)}")
-        t = threading.Thread(target=reader.monitor, args=[inputToWatch, onCallback])
+        t = threading.Thread(target=reader.monitor, args=[inputToWatch, supervisorInstance])
         t.start()
         watchingIndices.append(inputToWatch['index'])
 
