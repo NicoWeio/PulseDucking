@@ -6,7 +6,7 @@ def monitor(input, supervisor):
 
     try:
         # TODO: read stderr instead of redirecting to DEVNULL
-        proc = subprocess.Popen(['parec', f"--monitor-stream={str(input['index'])}"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        proc = subprocess.Popen(['parec', f"--monitor-stream={str(input.index)}"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         while True:
             data = proc.stdout.read(1)
             isZero = ord(data) == 0
@@ -20,7 +20,7 @@ def monitor(input, supervisor):
                 newIsPlaying = False
 
             if (newIsPlaying != isPlaying):
-                print(f"{input['name']}: {'playing' if newIsPlaying else 'not playing'}")
+                print(f"{input}: {'playing' if newIsPlaying else 'not playing'}")
                 isPlaying = newIsPlaying
                 supervisor.onPlayStateChange(newIsPlaying)
 

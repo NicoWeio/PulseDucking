@@ -17,8 +17,9 @@ class Supervisor:
     def onPlayStateChange(self, playing):
         react.onPlayStateChange(playing)
     def onClose(self, input):
-        watchingIndices.remove(input['index'])
-        print(f"Stopped watching {inputs.stringify(input)}")
+        watchingIndices.remove(input.index)
+        react.onPlayStateChange(False)
+        print(f"Stopped watching {input}")
 
 supervisorInstance = Supervisor()
 
@@ -27,14 +28,14 @@ def updateWatches():
 
     namesToWatch = [a['name'] for a in config['applications'] if a['role'] == 'master']
 
-    inputsToWatch = [i for i in inputsList if i['name'] in namesToWatch]
-    inputsToWatchNew = [i for i in inputsToWatch if i['index'] not in watchingIndices]
+    inputsToWatch = [i for i in inputsList if i.name in namesToWatch]
+    inputsToWatchNew = [i for i in inputsToWatch if i.index not in watchingIndices]
 
     for inputToWatch in inputsToWatchNew:
-        print(f"Started watching {inputs.stringify(inputToWatch)}")
+        print(f"Started watching {inputToWatch}")
         t = threading.Thread(target=reader.monitor, args=[inputToWatch, supervisorInstance])
         t.start()
-        watchingIndices.append(inputToWatch['index'])
+        watchingIndices.append(inputToWatch.index)
 
 while True:
     updateWatches()

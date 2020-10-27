@@ -1,20 +1,21 @@
 {
   "applications": [{
       "name": "Google Chrome",
-      "supports": [
-        "play",
-        "pause"
-      ],
+      "supports": [],
       "role": "master"
     },
     {
-      "name": "Discord",
+      "displayName": "Discord",
+      "name": "WEBRTC VoiceEngine",
       "supports": [],
       "role": "master"
     },
     {
       "name": "Spotify",
-      "supports": [],
+      "supports": [
+        "play",
+        "pause"
+      ],
       "role": "slave"
     }
   ],
