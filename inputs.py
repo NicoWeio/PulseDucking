@@ -1,6 +1,4 @@
 import subprocess
-stdoutdata = subprocess.getoutput("pacmd list-sink-inputs")
-# print(stdoutdata)
 
 def get():
     def reset():
@@ -10,6 +8,9 @@ def get():
 
     reset()
     devices = list()
+
+    stdoutdata = subprocess.getoutput("pacmd list-sink-inputs")
+    # print(stdoutdata)
 
     for line in stdoutdata.splitlines()[1:]:
         if 'index' in line:
@@ -26,6 +27,9 @@ def get():
             reset()
 
     return devices
+
+def stringify(input):
+    return f"{input['name']} ({input['index']})"
 
 if __name__ == '__main__':
     print("I am… main.")

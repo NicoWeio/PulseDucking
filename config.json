@@ -1,0 +1,25 @@
+{
+  "applications": [{
+      "name": "Google Chrome",
+      "supports": [
+        "play",
+        "pause"
+      ],
+      "role": "master"
+    },
+    {
+      "name": "Discord",
+      "supports": [],
+      "role": "master"
+    },
+    {
+      "name": "Spotify",
+      "supports": [],
+      "role": "slave"
+    }
+  ],
+  "preferences": {
+    "duckByPercent": 50,
+    "sourcesUpdateInterval": 5
+  }
+}
